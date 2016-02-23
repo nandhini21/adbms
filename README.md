@@ -17,6 +17,10 @@
 	- Use less than 50MB memory 
 	- Print response of _*average income for all age groups*_ in the PERSON table provided
 	- Parse Data, there is no delimiter on data 
+	
+## How to read a massive file without exausting the memory 
+	
+	- http://www.baeldung.com/java-read-lines-large-file
 		
 ## Initialization commands [DEPRECATED]	
 
