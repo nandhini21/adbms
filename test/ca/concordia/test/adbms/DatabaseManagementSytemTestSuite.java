@@ -1,9 +1,12 @@
+package ca.concordia.test.adbms; 
 
 
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+
+import ca.concordia.adbms.DatabaseManagementSystem;
 
 /**
  * @author murindwaz

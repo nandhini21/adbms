@@ -15,8 +15,8 @@
 	- Read command of type "SELECT * FROM PERSON WHERE AGE > 20" 
 	- Create index on database 
 	- Use less than 50MB memory 
-	- Write/Print response 
-	
+	- Print response of _*average income for all age groups*_ in the PERSON table provided
+	- Parse Data, there is no delimiter on data 
 		
 ## Initialization commands [DEPRECATED]	
 
