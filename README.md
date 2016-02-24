@@ -20,7 +20,49 @@
 	
 ## How to read a massive file without exausting the memory 
 	
+	- Streaming with Apache Commons IO 
+		- Conservative memory wise
+		- CONS: loads external dependency 
+		
+		- To read a particular line :: needed for sparse index 
+			```
+				# http://stackoverflow.com/a/14218145/132610
+				String line = FileUtils.readLines(theFile).get(lineNumber);
+			```
+		- 
+		```
+			#Streaming a file using Commons IO utility - http://www.baeldung.com/java-read-lines-large-file 
+			LineIterator it = FileUtils.lineIterator(theFile, "UTF-8");
+			try {
+			    while (it.hasNext()) {
+			        String line = it.nextLine();
+			        // do something with line
+			    }
+			} finally {
+			    LineIterator.closeQuietly(it);
+			}
+		```
+		
+		```
+		#Using Scanner to parse a file - http://www.javapractices.com/topic/TopicAction.do?Id=42
+		 protected void processLine(String aLine){
+			    //use a second Scanner to parse the content of each line 
+			    Scanner scanner = new Scanner(aLine);
+			    scanner.useDelimiter("=");
+			    if (scanner.hasNext()){
+			      //assumes the line has a certain structure
+			      String name = scanner.next();
+			      String value = scanner.next();
+			      log("Name is : " + quote(name.trim()) + ", and Value is : " + quote(value.trim()));
+			    }
+			    else {
+			      log("Empty or invalid line. Unable to process.");
+			    }
+		  }
+		```
 	- http://www.baeldung.com/java-read-lines-large-file
+	- http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly
+	- https://www.quora.com/What-is-the-fastest-way-to-read-a-large-file-in-Java-3-4gb-line-by-line
 		
 ## Initialization commands [DEPRECATED]	
 
