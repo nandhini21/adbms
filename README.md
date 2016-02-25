@@ -60,6 +60,8 @@
 			    }
 		  }
 		```
+	- The program uses one single string, in one line of type: 932512143mhSznrWOVy     gOPhwPenh      870000044954201,jXZNStreet,Montreal,QC,Canada
+	- Two rows: 
 	- http://www.baeldung.com/java-read-lines-large-file
 	- http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly
 	- https://www.quora.com/What-is-the-fastest-way-to-read-a-large-file-in-Java-3-4gb-line-by-line

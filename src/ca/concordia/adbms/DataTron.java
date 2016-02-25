@@ -7,7 +7,7 @@ import java.util.Map;
  * This class will manage tables, knows about database size etc. 
  * @author murindwaz
  */
-public class DatabaseManagementSystem {
+public class DataTron {
 
 	
 	
@@ -17,12 +17,14 @@ public class DatabaseManagementSystem {
 	private Map<String, Table> tables;
 	
 	
+	public DataTron(){}
+	
 	/**
 	 * The constructor of this file is temporal. 
 	 * It will serve to read and parse the file into valid data types  
 	 * @param selector
 	 */
-	public DatabaseManagementSystem(String selector) {
+	public DataTron(String selector) {
 		// TODO Auto-generated constructor stub
 	}
 
