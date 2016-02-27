@@ -22,7 +22,6 @@ public class DataTronTest {
 
 	@After
 	public void tearDown() {
-		// new File(reporter.getFilePath()).delete();
 	}
 
 	@Test
