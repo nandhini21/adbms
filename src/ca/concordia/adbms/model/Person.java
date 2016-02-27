@@ -57,8 +57,10 @@ public class Person {
 		this.address = address;
 	} 
 
-	
-	
+	//@todo add how a person looks in a too string setting
+	public String toString(){
+		return "";
+	}
 	
 	
 
