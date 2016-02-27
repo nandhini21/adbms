@@ -5,15 +5,15 @@ public class Person {
 	
 	
 	
-	//9 bytes 
+	//9 bytes String 
 	private String sin; 
-	//15 bytes 
+	//15 bytes String 
 	private String firstName; 
-	//15 bytes 
+	//15 bytes String
 	private String lastName; 
-	//2 bytes 
+	//2 bytes Integer ... a 16 Bits processor has 2 bytes integer, but not a 64 Bits processor  
 	private Integer age; 
-	//10 bytes
+	//10 bytes => Decimal 10.2 
 	private Integer income; 
 	//49 bytes 
 	private String address;
@@ -59,7 +59,7 @@ public class Person {
 
 	//@todo add how a person looks in a too string setting
 	public String toString(){
-		return "";
+		return String.format("SIN %s FIRST %s LAST %s AGE %d INCOME %d ADDRESS %s", getSin(), getFirstName(), getLastName(), getAge(), getIncome(), getAddress() );
 	}
 	
 	

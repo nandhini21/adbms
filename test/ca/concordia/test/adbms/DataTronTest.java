@@ -1,7 +1,5 @@
 package ca.concordia.test.adbms;
 
-//import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,13 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.concordia.adbms.DataTron;
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.util.Parser;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 
 public class DataTronTest {
 
@@ -34,12 +28,9 @@ public class DataTronTest {
 	@Test
 	public void testBufferedReader() {
 		
-		String str; 
-		
 		File file = new File(Configuration.PERSON_FILE);
 		FileInputStream rstream = null;
 		int reads  = 0; 
-		// (int) file.length()
 		try {
 			// create FileInputStream object
 			rstream = new FileInputStream(file);
@@ -48,7 +39,7 @@ public class DataTronTest {
 			// create string from byte array
 			// Reads up to certain bytes of data from this input stream into an
 			// array of bytes.
-			rstream.read(buffer);
+			//rstream.read(buffer);
 			/**
 			 * public int read(byte[] b, int off, int len) throws IOException
 			 * buffer - the buffer into which the data is read.
@@ -56,9 +47,8 @@ public class DataTronTest {
 			 * len - the maximum number of bytes read.
 			 */
 			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
-				str = new String(buffer);
 				Person person = Parser.parse(buffer);
-				//System.out.println(" +++ " + str + " --- " + reads );
+				System.out.println(" +++ " + person.toString() + " --- reads:: " + reads + " buffer length"+ buffer.length );
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -77,23 +67,7 @@ public class DataTronTest {
 		}
 	}
 
-	// reading line by line ===> doesn't work for US
-	@Test
-	public void testSequentialRead() throws IOException {
-		String line; //
-		File file = new File(Configuration.PERSON_FILE);
-		LineIterator it = FileUtils.lineIterator(file, "UTF-8");
-		try {
-			while (it.hasNext()) {
-				line = it.nextLine();
-				//System.out.println(" ==> " + line + " +++ ");
-				// do something with line
-			}
-		} finally {
-			LineIterator.closeQuietly(it);
-		}
-	}
-
+	
 	@Test
 	public void testCanDetectRows() throws Exception {
 
