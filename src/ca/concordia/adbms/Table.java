@@ -1,6 +1,7 @@
 package ca.concordia.adbms;
 
 import java.util.Map;
+import java.lang.System;
 
 
 
@@ -26,4 +27,47 @@ public class Table {
 		//if(index == null ) new HashMap(index, index); 
 		return this;
 	}
+	
+	//
+	public void saveIndex(String key)
+	{
+		
+	}
+	
+	//
+	public void query(String key)
+	{
+		
+	}
+	
+	//
+	public void count(String key)
+	{
+		
+	}
+	
+	/*
+	 * Wait for memory to be available and returns the available
+	 */
+	public long waitForAvailableMemory(int size)
+	{
+		long freeMemory = Runtime.getRuntime().freeMemory();
+		
+		while(Runtime.getRuntime().freeMemory() > size)
+		{
+			// Invoke the garbage collector
+			System.gc();
+			
+			//
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return freeMemory;
+	}
+
 }
