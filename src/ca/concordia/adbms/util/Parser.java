@@ -1,6 +1,6 @@
 package ca.concordia.adbms.util;
 
-import java.util.Scanner;
+import java.util.Arrays;
 
 import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.schema.PersonSchema;
@@ -9,8 +9,6 @@ import ca.concordia.adbms.schema.PersonSchema;
 
 public class Parser {
 	
-	
-	private static Scanner scanner;
 	
 	/**
 	 * @link http://stackoverflow.com/a/4951683/132610
@@ -33,27 +31,32 @@ public class Parser {
 		person.setAddress(new String(buffer, PersonSchema.getAddressOffset(), PersonSchema.ADDRESS));
 		return person; 
 	}
+	
+	
 
 	/**
-	 * @todo remove this class 
-	 * @param line
+	 * This function is used to detect which Task to execute 
+	 * Gets the very first argument 
+	 * @param arg
 	 * @return
-	 * @throws Exception
 	 */
-	public static Person parse(String line) throws Exception{
-		Person person = new Person();
-		scanner = new Scanner(line); 
-		 scanner.useDelimiter(" ");
-		 System.out.println( scanner );
-		    if (scanner.hasNext()){
-		    	person.setSin(scanner.next().trim());
-			    person.setFirstName(scanner.next().trim());
-			    person.setLastName(scanner.next().trim());
-			    person.setAge(Integer.parseInt(scanner.next().trim()));
-			    person.setIncome(Integer.parseInt(scanner.next().trim()));
-			    person.setAddress(scanner.next());
-		    }
-		return person;
+	public static String parseCommand(String arg) {
+		String command = arg.split("(\\-[a-zA-Z])")[0].trim();
+		if( Arrays.asList(new String[]{ "select","exit"}).contains(command) ){
+			return command;
+		}
+		return  null;
 	}
-
+	
+	/**
+	 * This function parses number values 
+	 * @param arg
+	 * @return
+	 */
+	public static String [] parseSelect(String arg){
+		String[] parsed = arg.split("(\\-[a-zA-Z])");
+		return new String[]{ parsed[1].trim(), parsed[2].trim() };
+	}
+	
+	
 }

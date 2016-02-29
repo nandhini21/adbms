@@ -17,6 +17,12 @@
 	- Use less than 50MB memory 
 	- Print response of _*average income for all age groups*_ in the PERSON table provided
 	- Parse Data, there is no delimiter on data 
+
+## File location 
+	
+	- I kept two files, one is backup and another is used by the program for reads 
+	- backup data/person.txt, file used by the program data/db/person.txt
+	- Index files may be stored at data/db/index directory  
 	
 ## How to read a massive file without exausting the memory 
 	

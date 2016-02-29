@@ -1,5 +1,7 @@
 package ca.concordia.test.adbms;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +25,39 @@ public class DataTronTest {
 	@After
 	public void tearDown() {
 	}
+
+	@Test public void testConfiguration(){
+		assertTrue( Configuration.MAX_MEMORY == (50*1024*1024));
+		assertTrue(Configuration.PERSON_TABLE == "person.txt");
+		assertTrue(Configuration.PERSON_FILE == "data/db/person.txt");
+	}
+
+	@Test 
+	public void testCanInterpretInputCommand(){
+		assertEquals(Parser.parseCommand("exit"), "exit"); 
+		assertEquals(Parser.parseCommand("select"), "select"); 
+		String[] command = Parser.parseSelect("select -max 30 -min 20");
+		assertEquals(command[0], "20");//min
+		assertEquals(command[1], "30");//max
+	}
+	
+	@Test 
+	public void testCanFindTeenagers(){
+		//1900000 => We have 67 People having 19 Years Old 
+		//1800000 => We have 67 People having 18 Years old
+	}
+	@Test 
+	public void testCanFindSeniors(){
+		//8200000 => we have 47 People having 82 years old 
+		//8700000 => we have 67 People having 87 Years old 
+	}
+	@Test 
+	public void testCanFindMiddleAged(){
+		//6600000 => we have 66 People having 66 Years old
+		//5300000 => We have 71 People having 53 Years old 
+	}
+	
+
 
 	@Test
 	public void testBufferedReader() {
