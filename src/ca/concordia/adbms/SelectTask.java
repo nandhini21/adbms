@@ -23,7 +23,7 @@ public class SelectTask implements Task {
 
 	
 	public void execute(){
-		
+		System.out.println("Select Using Index");
 	}
 
 }

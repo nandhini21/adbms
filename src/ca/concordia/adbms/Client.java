@@ -24,15 +24,14 @@ public class Client {
 	 * @throws SocketException
 	 */
 	public static void main(String[] args) throws SocketException {
+		Task task;
+		String argument;
+		BufferedReader keyboard;
+		boolean session = true;
 		Logger logger = Logger.getLogger(Client.class);
 		logger.info("Starting application ");
-		Task task;
 		try {
-			BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-			boolean session = true;
-			String institution = null;
-			String argument = "";
-			//booting client application
+			keyboard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println(Configuration.getApplicationTitle() );
 			//a session is available till user exits  
 			while(session){
@@ -43,7 +42,7 @@ public class Client {
 					argument = new String(keyboard.readLine() ).trim().replaceAll("\\s+", " ");
 					try{
 						task = TaskFactory.create(argument);
-						if(task instanceof BonjourTask){
+						if(task instanceof SelectTask){
 						}
 						if(task != null ){ 
 							task.execute();
@@ -53,6 +52,7 @@ public class Client {
 					}catch(ExitException e ){
 						valid = false; 
 						session = false;
+						keyboard.close();
 						System.out.println( e.getMessage() );
 					}catch(Exception e){
 						valid = false;
