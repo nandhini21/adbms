@@ -1,18 +1,14 @@
 package ca.concordia.test.adbms;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.concordia.adbms.SelectQuery;
 import ca.concordia.adbms.conf.Configuration;
-import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.util.Parser;
 
 public class DataTronTest {
@@ -36,9 +32,27 @@ public class DataTronTest {
 	public void testCanInterpretInputCommand(){
 		assertEquals(Parser.parseCommand("exit"), "exit"); 
 		assertEquals(Parser.parseCommand("select"), "select"); 
-		String[] command = Parser.parseSelect("select -max 30 -min 20");
-		assertEquals(command[0], "20");//min
-		assertEquals(command[1], "30");//max
+		
+		SelectQuery query = Parser.parseSelect("select -max 30 -min 20");
+		assertEquals(query.getMax(), 30);//min
+		assertEquals(query.getMin(), 20);//max
+		assertEquals(query.getAge(), -1);//age
+		
+		query = Parser.parseSelect("select -age 30 -min 20 -max 40");
+		assertEquals(query.getMax(), 40);//min
+		assertEquals(query.getMin(), 20);//max
+		assertEquals(query.getAge(), 30);//age
+		
+		query = Parser.parseSelect("select -age 12");
+		assertEquals(query.getMax(), -1);//min
+		assertEquals(query.getMin(), -1);//max
+		assertEquals(query.getAge(), 12);//age
+		
+		query = Parser.parseSelect("select");
+		assertEquals(query.getMax(), -1);//min
+		assertEquals(query.getMin(), -1);//max
+		assertEquals(query.getAge(), -1);//age
+		
 	}
 	
 	@Test 
@@ -62,43 +76,7 @@ public class DataTronTest {
 	@Test
 	public void testBufferedReader() {
 		
-		File file = new File(Configuration.PERSON_FILE);
-		FileInputStream rstream = null;
-		int reads  = 0; 
-		try {
-			// create FileInputStream object
-			rstream = new FileInputStream(file);
-			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
-
-			// create string from byte array
-			// Reads up to certain bytes of data from this input stream into an
-			// array of bytes.
-			//rstream.read(buffer);
-			/**
-			 * public int read(byte[] b, int off, int len) throws IOException
-			 * buffer - the buffer into which the data is read.
-			 * off - the start offset in the destination array buffer
-			 * len - the maximum number of bytes read.
-			 */
-			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
-				Person person = Parser.parse(buffer);
-				System.out.println(" +++ " + person.toString() + " --- reads:: " + reads + " buffer length"+ buffer.length );
-			}
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("File not found" + e);
-		} catch (IOException ioe) {
-			System.out.println("Exception while reading file " + ioe);
-		} finally {
-			// close the streams using close method
-			try {
-				if (rstream != null) {
-					rstream.close();
-				}
-			} catch (IOException ioe) {
-				System.out.println("Error while closing stream: " + ioe);
-			}
-		}
+		
 	}
 
 	

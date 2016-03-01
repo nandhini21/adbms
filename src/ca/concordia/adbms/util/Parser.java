@@ -2,6 +2,7 @@ package ca.concordia.adbms.util;
 
 import java.util.Arrays;
 
+import ca.concordia.adbms.SelectQuery;
 import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.schema.PersonSchema;
 
@@ -49,14 +50,25 @@ public class Parser {
 	}
 	
 	/**
-	 * This function parses number values 
+	 * This function parse Select options
 	 * @param arg
-	 * @return
+	 * @return SelectQuery 
 	 */
-	public static String [] parseSelect(String arg){
-		String[] parsed = arg.split("(\\-[a-zA-Z])");
-		return new String[]{ parsed[1].trim(), parsed[2].trim() };
+	public static SelectQuery parseSelect(String arg){
+		int min = -1;  int age = -1; int max = -1; 
+		String[] parsed = arg.split(" ");
+		int minIndex = java.util.Arrays.asList(parsed).indexOf("-min");
+		int ageIndex = java.util.Arrays.asList(parsed).indexOf("-age");
+		int maxIndex = java.util.Arrays.asList(parsed).indexOf("-max");
+		if( minIndex > -1 && java.util.Arrays.asList(parsed).get(minIndex + 1) != null ){ 
+			min = Integer.parseInt(java.util.Arrays.asList(parsed).get(minIndex + 1));
+		}
+		if( ageIndex > -1 &&  java.util.Arrays.asList(parsed).get(ageIndex + 1) != null ){
+			age = Integer.parseInt(java.util.Arrays.asList(parsed).get(ageIndex + 1));
+		}
+		if( maxIndex > -1 &&  java.util.Arrays.asList(parsed).get(maxIndex + 1) != null ){ 
+			max = Integer.parseInt(java.util.Arrays.asList(parsed).get(maxIndex + 1));
+		}
+		return new SelectQuery(min, age, max); 
 	}
-	
-	
 }

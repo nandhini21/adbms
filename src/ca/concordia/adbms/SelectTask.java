@@ -5,25 +5,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.commons.cli.*; 
+
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.util.Parser;
 
 /**
- * Bonjour Task is used by the client to establish connection with a given
- * remote server.
- * 
- * @author murindwaz
+ * Select Task executes search query.
  */
 public class SelectTask implements Task {
+	
 	// age to select from
-	private int min;
-	private int max;
-
+	private SelectQuery query; 
+	
 	public SelectTask(String argument) throws IOException {
-		String[] select = Parser.parseSelect(argument);
-		min = Integer.parseInt(select[0]);
-		max = Integer.parseInt(select[1]);
+		query = Parser.parseSelect(argument);
 	}
 
 	
@@ -32,7 +29,7 @@ public class SelectTask implements Task {
 	 * @todo --- only read sequentially if there is no index 
 	 * @todo --- build index on first read, or at initialization 
 	 */
-	public void execute() {
+	public void execute() throws ExitException {
 		File file = new File(Configuration.PERSON_FILE);
 		FileInputStream rstream = null;
 		Person person = null; 
@@ -41,11 +38,6 @@ public class SelectTask implements Task {
 			// create FileInputStream object
 			rstream = new FileInputStream(file);
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
-
-			// create string from byte array
-			// Reads up to certain bytes of data from this input stream into an
-			// array of bytes.
-			// rstream.read(buffer);
 			/**
 			 * public int read(byte[] b, int off, int len) throws IOException
 			 * buffer - the buffer into which the data is read. off - the start
