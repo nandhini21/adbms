@@ -29,7 +29,9 @@ public class DataTronTest {
 	}
 
 	@Test public void testConfiguration(){
-		assertTrue( Configuration.MAX_MEMORY == (50*1024*1024));
+		assertEquals(Configuration.TUPLE_SIZE, 100);
+		assertEquals(Configuration.BLOCK_SIZE, (4*1024));
+		assertTrue(Configuration.MAIN_MEMORY == (50*1024*1024));
 		assertTrue(Configuration.PERSON_TABLE == "person.txt");
 		assertTrue(Configuration.PERSON_FILE == "data/db/person.txt");
 	}
@@ -108,11 +110,17 @@ public class DataTronTest {
 
 
 	@Test
-	public void testBufferedReader() {
-		
-		
+	public void testAverageIncome() {
+		//for all age groups
+		//
 	}
-
+	@Test public void testCanGroupByAge(){}
+	@Test public void testCanCountPassesByMemoryConfiguration(){
+		//for 4KB block(read once) count in following scenarios
+		//Using 2MB for main memory
+		//Using 5MB for main memory 
+	}
+	@Test public void testCanNotExceedPasses(){}
 	
 	@Test
 	public void testCanDetectRows() throws Exception {

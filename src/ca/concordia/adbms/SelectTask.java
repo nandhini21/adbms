@@ -47,6 +47,7 @@ public class SelectTask implements Task {
 			// create FileInputStream object
 			rstream = new FileInputStream(file);
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
+			byte block[] = new byte[Configuration.BLOCK_SIZE];
 			/**
 			 * public int read(byte[] b, int off, int len) throws IOException
 			 * buffer - the buffer into which the data is read. off - the start
@@ -59,8 +60,10 @@ public class SelectTask implements Task {
 					memoryManager.increment();
 					System.out.println(String.format(" %s ", person.toString()));
 				} else if( query.getMax() > -1 && query.getMin() > -1 ){
-					memoryManager.increment();
-					System.out.println(String.format(" %s ", person.toString()));
+					if(person.getAge() <= query.getMax() && person.getAge() >= query.getMin())  {
+						memoryManager.increment();
+						System.out.println(String.format(" %s ", person.toString()));
+					}
 				}
 			}
 		} catch (FileNotFoundException e) {
