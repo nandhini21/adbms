@@ -6,6 +6,7 @@ import java.lang.System;
 
 
 /**
+ * @deprecated - this class may not be needed, or not be needed in this form. 
  * Descibing a table in database 
  * @author murindwaz
  *
@@ -46,7 +47,9 @@ public class Table {
 		
 	}
 	
-	/*
+	/** 
+	 * @todo move this function to MemoryManager. 
+	 * @todo we may not need to force GC to release memory, as long as there is no hold back of File content in Memory. 
 	 * Wait for memory to be available and returns the available
 	 */
 	public long waitForAvailableMemory(int size)
