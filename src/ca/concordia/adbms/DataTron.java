@@ -4,6 +4,7 @@ import java.util.Map;
 
 
 /**
+ * @deprecated Implementation is done in client class 
  * @todo --- relized that this class is not needed. 
  * There is a SelectTask that is doing this job better. 
  */

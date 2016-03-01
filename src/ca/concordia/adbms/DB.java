@@ -3,6 +3,7 @@ package ca.concordia.adbms;
 import java.util.Scanner;
 
 /**
+ * @deprecated implementation is done in Client class. 
  * @todo --- this class can be replaced with Client Program. 
  * DataTron 
  */
