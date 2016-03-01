@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.commons.cli.*; 
-
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
 import ca.concordia.adbms.util.Parser;
@@ -18,6 +16,17 @@ public class SelectTask implements Task {
 	
 	// age to select from
 	private SelectQuery query; 
+	private MemoryManager memoryManager; 
+	
+	//injecting memory manager in this task 
+	public void setMemoryManager(MemoryManager memoryManager){
+		this.memoryManager = memoryManager; 
+	}
+	public MemoryManager getMemoryManager(){
+		return memoryManager;
+	}
+	
+	
 	
 	public SelectTask(String argument) throws IOException {
 		query = Parser.parseSelect(argument);
@@ -46,10 +55,14 @@ public class SelectTask implements Task {
 			 */
 			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
 				person = Parser.parse(buffer);
-				System.out.println(" +++ " + person.toString() + " reads:: " + reads + " length"
-						+ buffer.length);
+				if( query.getAge() > -1 && person.getAge() == query.getAge() ){ 
+					memoryManager.increment();
+					System.out.println(String.format(" %s ", person.toString()));
+				} else if( query.getMax() > -1 && query.getMin() > -1 ){
+					memoryManager.increment();
+					System.out.println(String.format(" %s ", person.toString()));
+				}
 			}
-
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found" + e);
 		} catch (IOException ioe) {

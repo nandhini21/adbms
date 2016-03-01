@@ -9,4 +9,9 @@ public class ExitTask implements Task {
 	public void execute() throws ExitException {
 			throw new ExitException("******* Thanks for trying out our service ******* ");
 	}
+	public void setMemoryManager(MemoryManager memoryManager) {
+	}
+	public MemoryManager getMemoryManager() {
+		return null;
+	}
 }

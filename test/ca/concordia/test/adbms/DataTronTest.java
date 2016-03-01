@@ -3,11 +3,17 @@ package ca.concordia.test.adbms;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.concordia.adbms.ExitException;
+import ca.concordia.adbms.MemoryManager;
 import ca.concordia.adbms.SelectQuery;
+import ca.concordia.adbms.SelectTask;
+import ca.concordia.adbms.Task;
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.util.Parser;
 
@@ -56,19 +62,47 @@ public class DataTronTest {
 	}
 	
 	@Test 
-	public void testCanFindTeenagers(){
+	public void testCanFindTeenagers() throws ExitException, IOException{
 		//1900000 => We have 67 People having 19 Years Old 
 		//1800000 => We have 67 People having 18 Years old
+		Task task = new SelectTask("select -age 19"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 119);
+		
+		task = new SelectTask("select -age 18"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 128);
 	}
+	
 	@Test 
-	public void testCanFindSeniors(){
+	public void testCanFindSeniors() throws ExitException, IOException{
 		//8200000 => we have 47 People having 82 years old 
 		//8700000 => we have 67 People having 87 Years old 
+		Task task = new SelectTask("select -age 82"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 95);
+		
+		task = new SelectTask("select -age 87"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 115);
 	}
 	@Test 
-	public void testCanFindMiddleAged(){
+	public void testCanFindMiddleAged() throws ExitException, IOException{
 		//6600000 => we have 66 People having 66 Years old
 		//5300000 => We have 71 People having 53 Years old 
+		Task task = new SelectTask("select -age 66"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 135);
+		
+		task = new SelectTask("select -age 53"); 
+		task.setMemoryManager( new MemoryManager());
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 136);
 	}
 	
 
@@ -94,43 +128,5 @@ public class DataTronTest {
 		// assertTrue(person.getIncome().equals(44954201));
 		// assertTrue(person.getAddress().equals("jXZNStreet,Montreal,QC,Canada"));
 	}
-
-	@Test
-	public void testReadPersonFile() {
-		// DataTron dbms = new DataTron(DataTron.SELECT);
-		// dbms.setMaxMemory(Configuration.MAX_MEMORY);
-		// dbms.registerTable(Configuration.PERSON_TABLE);
-		// dbms.getTable(Configuration.PERSON_TABLE).createIndex(Configuration.PERSON_TABLE_AGE_COLUMN);
-
-		// Map<String, Book> books = new HashMap<String, Book>();
-		// Map<String, Map<String, Account>> accounts = new HashMap<String,
-		// Map<String, Account>>();
-		// LibraryServerImpl testLibrary = new
-		// LibraryServerImpl(Configuration.INSTITUTION_CONCORDIA, books,
-		// accounts);
-		// assertNotNull(testLibrary);
-	}
-
-	// public void testParsePersonRecords() {
-	// DataTron dbms = new DataTron(DataTron.SELECT);
-	// }
-
-	// public void testCalculateAgerageIncomePerAgeRange() {
-	// DataTron dbms = new DataTron(DataTron.SELECT);
-	// }
-
-	// @Test
-	// public void testCanReserveBook() {
-	// HashMap<String, Book> books = new HashMap<String, Book>();
-	// books.put(theBookOfNegros.getCode(), theBookOfNegros);
-	// books.put(macbeth.getCode(), macbeth);
-	// books.put(hamlet.getCode(), hamlet);
-	// books.put(lavale.getCode(), lavale);
-	// Map<String, Map<String, Account>> accounts = new HashMap<String,
-	// Map<String, Account>>();
-	// LibraryServerImpl testLibrary = new
-	// LibraryServerImpl(Configuration.INSTITUTION_CONCORDIA, books,
-	// accounts);
-	// }
 
 }

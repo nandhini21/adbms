@@ -43,6 +43,7 @@ public class Client {
 					try{
 						task = TaskFactory.create(argument);
 						if(task instanceof SelectTask){
+							task.setMemoryManager( new MemoryManager());
 						}
 						if(task != null ){ 
 							task.execute();
