@@ -4,8 +4,8 @@ import java.util.Map;
 
 
 /**
- * This class will manage tables, knows about database size etc. 
- * @author murindwaz
+ * @todo --- relized that this class is not needed. 
+ * There is a SelectTask that is doing this job better. 
  */
 public class DataTron {
 

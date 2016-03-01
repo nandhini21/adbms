@@ -2,6 +2,10 @@ package ca.concordia.adbms;
 
 import java.util.Scanner;
 
+/**
+ * @todo --- this class can be replaced with Client Program. 
+ * DataTron 
+ */
 public class DB {
 	public static void main(String[] args)
 	{
