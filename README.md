@@ -28,7 +28,7 @@
 	- Push code to master remote branch
 		- ```sh git push origin master```
 
-### Features implemented in this project 
+### Features
 	
 	- Parse Data, there is no delimiter on data 
 	- Find a group of people using 
@@ -39,26 +39,21 @@
 	- Print _*memory usage*_
 	- Print _*passes*_ required to read data
 
-### File location 
+### File locations 
 	
-	- I kept two files, one is backup and another is used by the program for reads 
-	- backup data/person.txt, file used by the program data/db/person.txt
-	- Index files may be stored at data/db/index directory  
-
+	- Directory /data has database data
+	- For backup purposes, data/person is kept
+	- Index files are stored at data/db/index
+	- Database file are stored at data/db/person.txt
+	
 ### How to read a massive file without exhausting the memory 
 	
 	- Streaming with Apache Commons IO 
 		- Conservative memory wise
 		- CONS: loads external dependency 
-		- To read a particular line :: needed for sparse index 
-			```
-				# http://stackoverflow.com/a/14218145/132610
-				String line = FileUtils.readLines(theFile).get(lineNumber);
-			```
-		- 
+
+### References 
 		
-	- The program uses one single string, in one line of type: 932512143mhSznrWOVy     gOPhwPenh      870000044954201,jXZNStreet,Montreal,QC,Canada
-	- Two rows: 
-	- http://www.baeldung.com/java-read-lines-large-file
-	- http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly
-	- https://www.quora.com/What-is-the-fastest-way-to-read-a-large-file-in-Java-3-4gb-line-by-line
+- [Java: Read large file lines](http://www.baeldung.com/java-read-lines-large-file)
+- [Tips to read file quickly](http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly)
+- [Quora: Fastest way to read a file](https://www.quora.com/What-is-the-fastest-way-to-read-a-large-file-in-Java-3-4gb-line-by-line)
