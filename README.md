@@ -1,6 +1,16 @@
 ## How to run this project 
 
+	- The main program is Client.java src/[ca.concordia.adbms.Client.java]
+	- Using Eclipse, right click on the file and choose "Run as" > "Java Application"
 
+## How to change project configuration 
+
+	- Configuration file is Configuration.java src/[ca.concordia.adbms.config.Configuration.java]
+	- MAIN_MEMORY can either be changed to 
+		- 5MB (52428800 = 5 * 1024 * 1024) Bytes 
+		- or 2MB (52428800 = 2 * 1024 * 1024) Bytes
+	- 
+	
 ## How to contribute to the project
 
 	- git clone https://github.com/nandhini21/adbms.git 

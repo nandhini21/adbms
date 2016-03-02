@@ -31,7 +31,7 @@ public class DataTronTest {
 	@Test public void testConfiguration(){
 		assertEquals(Configuration.TUPLE_SIZE, 100);
 		assertEquals(Configuration.BLOCK_SIZE, (4*1024));
-		assertTrue(Configuration.MAIN_MEMORY == (50*1024*1024));
+		assertTrue(Configuration.MAIN_MEMORY == (5*1024*1024) || Configuration.MAIN_MEMORY == (2*1024*1024));
 		assertTrue(Configuration.PERSON_TABLE == "person.txt");
 		assertTrue(Configuration.PERSON_FILE == "data/db/person.txt");
 	}
