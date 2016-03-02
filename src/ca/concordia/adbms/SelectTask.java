@@ -44,10 +44,17 @@ public class SelectTask implements Task {
 		Person person = null; 
 		int reads = 0;
 		try {
+			//@todo read and Establish the index - as the first search hits this execute for first time 
 			// create FileInputStream object
 			rstream = new FileInputStream(file);
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
 			byte block[] = new byte[Configuration.BLOCK_SIZE];
+			/**
+			 * Moving back and forth in a stream to read data 
+			 * 	FileInputStream fis = new FileInputStream("/etc/hosts");
+			 * 	FileChannel     fc = fis.getChannel();
+			 *  		fc.position(100);// set the file pointer to byte position 100;
+			 **/
 			/**
 			 * public int read(byte[] b, int off, int len) throws IOException
 			 * buffer - the buffer into which the data is read. off - the start

@@ -57,3 +57,6 @@
 - [Java: Read large file lines](http://www.baeldung.com/java-read-lines-large-file)
 - [Tips to read file quickly](http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly)
 - [Quora: Fastest way to read a file](https://www.quora.com/What-is-the-fastest-way-to-read-a-large-file-in-Java-3-4gb-line-by-line)
+- [](https://dev.mysql.com/doc/refman/5.1/en/innodb-table-and-index.html)
+- [How database indexing works](http://stackoverflow.com/questions/1108/how-does-database-indexing-work)
+- [How to navigate InputStream - to search for data at a given point in a Stream](http://stackoverflow.com/a/15393924/132610)
