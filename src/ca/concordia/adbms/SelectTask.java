@@ -30,6 +30,18 @@ public class SelectTask implements Task {
 	
 	public SelectTask(String argument) throws IOException {
 		query = Parser.parseSelect(argument);
+		/**
+		 * @todo build index here 
+		 * Index looks like:
+		 * INDEX = [
+		 * 	age[18] : [l1,l3, l10],
+		 * 	age[20] : [l12,l13, l110]
+		 * 	age[60] : [l21,l23, l210]
+		 * ]
+		 * @todo - Keep it in memory
+		 * @todo - Flush it to files if cannot fit in memory  
+		 * DONE building index 
+		 */
 	}
 
 	
@@ -39,6 +51,20 @@ public class SelectTask implements Task {
 	 * @todo --- build index on first read, or at initialization 
 	 */
 	public void execute() throws ExitException {
+
+		/**
+		 * @todo SELECT from a line 
+		 *  - find all 18 years old people
+		 * 	- GOTO INDEX find age 18 key ( INDEX[age[18]] )
+		 * 	- lines in index is now [l1,l3, l10]
+		 * 	- lines are sorted by line number 
+		 *  - move sequentially in stream using FileChannel.position( line# * TUPPLE_SIZE )		
+		 *  	for(size in [l1,l3, l10]) 
+		 *  		read from FileChannel.position( size * TUPPLE_SIZE )	
+		 * 
+		 * @todo - how to work with BLOCK and Buffer/Tupple 
+		 */
+		
 		File file = new File(Configuration.PERSON_FILE);
 		FileInputStream rstream = null;
 		Person person = null; 
@@ -73,6 +99,7 @@ public class SelectTask implements Task {
 					}
 				}
 			}
+			//buffer = null;
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found" + e);
 		} catch (IOException ioe) {

@@ -30,6 +30,7 @@ public class Client {
 		boolean session = true;
 		Logger logger = Logger.getLogger(Client.class);
 		logger.info("Starting application ");
+		MemoryManager memoryManager = new MemoryManager();
 		try {
 			keyboard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println(Configuration.getApplicationTitle() );
@@ -43,7 +44,8 @@ public class Client {
 					try{
 						task = TaskFactory.create(argument);
 						if(task instanceof SelectTask){
-							task.setMemoryManager( new MemoryManager());
+							//if index not created, create ONE && task.setIndexManager(indexManager);
+							task.setMemoryManager(memoryManager);
 						}
 						if(task != null ){ 
 							task.execute();
