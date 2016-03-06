@@ -18,8 +18,11 @@ public class MemoryManager {
 		resultSize = resultSize + 1; 
 	}
 
+	/**
+	 * @param rstream FileInputStream of file whose size will be returned
+	 * @throws IOException
+	 */
 	public void calculateFileReadPass(FileInputStream rstream) throws IOException {
-		//FileChannel channel = rstream.getChannel();
 		tableFileSize = rstream.getChannel().size(); 
 	}
 	

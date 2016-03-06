@@ -31,7 +31,7 @@ public class DataTronTest {
 	@Test public void testConfiguration(){
 		assertEquals(Configuration.TUPLE_SIZE, 100);
 		assertEquals(Configuration.BLOCK_SIZE, (4*1024));
-		assertTrue(Configuration.MAIN_MEMORY == (5*1024*1024) || Configuration.MAIN_MEMORY == (2*1024*1024));
+		assertTrue(Configuration.MEMORY_SIZE == (5*1024*1024) || Configuration.MEMORY_SIZE == (2*1024*1024));
 		assertTrue(Configuration.PERSON_TABLE == "person.txt");
 		assertTrue(Configuration.PERSON_FILE == "data/db/person.txt");
 	}
@@ -110,7 +110,6 @@ public class DataTronTest {
 		//for all age groups
 		//
 	}
-	@Test public void testCanGroupByAge(){}
 	@Test public void testCanCountPassesByMemoryConfiguration() throws IOException, ExitException{
 		MemoryManager memoryManager = new MemoryManager(); 
 		Task task = new SelectTask("select -age 53"); 
@@ -122,22 +121,17 @@ public class DataTronTest {
 		//Using 2MB for main memory
 		//Using 5MB for main memory 
 		assertEquals(task.getMemoryManager().getFileReadPasses(), 781); 
+		
 	}
-	@Test public void testCanNotExceedPasses(){}
-	
-	@Test
-	public void testCanDetectRows() throws Exception {
 
-		// String testString =
-		// "932512143mhSznrWOVy     gOPhwPenh      870000044954201,jXZNStreet,Montreal,QC,Canada                932512144xjtfDtTt       hPOAwdPea      660000050072554,CWSFGStreet,Montreal,QC,Canada               932512145eTvcDpIGjbAyJ  NKNqZrREB      670000071286132,iJIXStreet,Montreal,QC,Canada ";
-		// ;
-		// Person person = Parser.parse(testString);
-		// assertTrue(person.getSin().equals(932512143) );
-		// assertTrue(person.getFirstName().equals("mhSznrWOVy") );
-		// assertTrue(person.getLastName().equals("gOPhwPenh") );
-		// assertTrue(person.getAge().equals(87));//
-		// assertTrue(person.getIncome().equals(44954201));
-		// assertTrue(person.getAddress().equals("jXZNStreet,Montreal,QC,Canada"));
+	@Test public void testCanNotExceedPasses() throws IOException, ExitException{
+		//assertEquals()
+		MemoryManager memoryManager = new MemoryManager(); 
+		Task task = new SelectTask("select -age 53"); 
+		task.setMemoryManager(memoryManager);
+		task.execute(); 
 	}
+	
+	
 
 }

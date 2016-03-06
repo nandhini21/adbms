@@ -16,6 +16,7 @@ public class Parser {
 	 * @link http://stackoverflow.com/a/4951639/132610
 	 * Function to parse a person tuple, and returns a Person Schema
 	 * @param buffer
+	 * @param buffer
 	 * @return Person
 	 */
 	public static Person parse(byte [] buffer, int offset){

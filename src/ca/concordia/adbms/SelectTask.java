@@ -33,6 +33,7 @@ public class SelectTask implements Task {
 	public SelectTask(String argument) throws IOException {
 		query = Parser.parseSelect(argument);
 		/**
+		 * @todo Make sure we create the index Once 
 		 * @todo build index here Index looks like: INDEX = [ age[18] : [l1,l3,
 		 *       l10], age[20] : [l12,l13, l110] age[60] : [l21,l23, l210] ]
 		 * @todo - Keep it in memory
@@ -136,9 +137,10 @@ public class SelectTask implements Task {
 			memoryManager.calculateFileReadPass(rstream);
 
 			// Array Size should always be smaller than Integer.MAX_VALUE
+			byte memory[] = new byte[Configuration.MEMORY_SIZE];
 			byte block[] = new byte[Configuration.BLOCK_SIZE];
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
-
+			
 			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
 				person = Parser.parse(buffer, 0);
 				if (query.getAge() > -1 && person.getAge() == query.getAge()) {
