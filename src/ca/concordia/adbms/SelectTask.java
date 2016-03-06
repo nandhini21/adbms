@@ -42,61 +42,43 @@ public class SelectTask implements Task {
 	}
 
 	public void createIndex() {
-		//
+
 		File file = new File(Configuration.PERSON_FILE);
 		FileInputStream rstream = null;
 		Person person = null;
 
-		//
 		try {
-			//
 			System.out.print("\nCreating the index");
-			// @todo read num multiple blocks at one
-			byte buffer[] = new byte[Configuration.BLOCK_SIZE];
-			// make sure when read a record is not "cut"
-			int readSize = (int) Math.floor(Configuration.BLOCK_SIZE / Configuration.TUPLE_SIZE) * Configuration.TUPLE_SIZE;
-			//
+			/**read num multiple blocks at one**/
 			int read;
 			int ios = 0;
 			int line = 0;
-			//
+			String indexFileLocation;
+			byte buffer[] = new byte[Configuration.BLOCK_SIZE];
+			// make sure when read a record is not "cut"
+			int readSize = (int) Math.floor(Configuration.BLOCK_SIZE / Configuration.TUPLE_SIZE) * Configuration.TUPLE_SIZE;
 			Hashtable<Integer, FileOutputStream> index = new Hashtable<Integer, FileOutputStream>();
-
-			//
 			rstream = new FileInputStream(file);
 			while ((read = rstream.read(buffer, 0, readSize)) != -1) {
-				//
 				ios += 1;
-
 				// number of records read
 				int numRecords = (int) Math.floor(read / Configuration.TUPLE_SIZE);
-
-				//
 				for (int i = 0; i < numRecords; i++) {
-					//
 					person = Parser.parse(buffer, 0);
-					if (!index.containsKey(person.getAge())) {// Create an a
-						// file for age
-						// if not
-						// created
-						// index.put((Integer)12,
-						// indexFile);
-						FileOutputStream indexFile = new FileOutputStream(Configuration.INDEX_BASE_PATH
-								+ person.getAge() + ".txt", true);
+					if (!index.containsKey(person.getAge())) { 
+						indexFileLocation = String.format("%s%d.txt", Configuration.INDEX_BASE_PATH, person.getAge());
+						/**Create a file for age if not created index.put((Integer)12, indexFile);*/	
+						FileOutputStream indexFile = new FileOutputStream(indexFileLocation, true);
 						index.put(person.getAge(), indexFile);
 					}
-
 					// write line to index
 					byte[] lineBytes = String.format("%9s", line).getBytes();
 					index.get(person.getAge()).write(lineBytes);
-					//
 					line++;
 				}
 			}
-
 			System.out.print("\nIndex creation complete, lines: " + line);
 			System.out.print("\nIndex creation complete, num of ios: " + ios);
-
 			// Close the index files
 			for (FileOutputStream stream : index.values()) {
 				stream.close();
