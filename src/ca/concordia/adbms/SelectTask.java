@@ -3,7 +3,9 @@ package ca.concordia.adbms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Hashtable;
 
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
@@ -30,6 +32,7 @@ public class SelectTask implements Task {
 	
 	public SelectTask(String argument) throws IOException {
 		query = Parser.parseSelect(argument);
+		createIndex();
 		/**
 		 * @todo build index here 
 		 * Index looks like:
@@ -42,6 +45,84 @@ public class SelectTask implements Task {
 		 * @todo - Flush it to files if cannot fit in memory  
 		 * DONE building index 
 		 */
+	}
+
+	
+	public void createIndex()
+	{
+		//
+		File file = new File(Configuration.PERSON_FILE);
+		FileInputStream rstream = null;
+		Person person = null; 
+		
+		//
+		try {
+			//
+			System.out.print("\nCreating the index");
+			//@todo read num multiple blocks at one
+			int bufferSize = Configuration.BLOCK_SIZE;
+			//
+			byte buffer[] = new byte[bufferSize];
+			// make sure when read a record is not "cut"
+			int readSize = (int) Math.floor(bufferSize/Configuration.TUPLE_SIZE) * Configuration.TUPLE_SIZE;
+			//
+			int read;
+			int ios = 0;
+			int line = 0;
+			//
+			Hashtable<Integer, FileOutputStream> index = new Hashtable<Integer, FileOutputStream>();
+			
+			//
+			rstream = new FileInputStream(file);
+			while ((read = rstream.read(buffer, 0, readSize)) != -1) {
+				//
+				ios+=1;
+				
+				// number of records read
+				int numRecords = (int) Math.floor(read/Configuration.TUPLE_SIZE);
+				
+				//
+				for(int i=0; i<numRecords; i++)
+				{
+					//
+					person = Parser.parse(buffer, 0);
+					if(!index.containsKey(person.getAge()))
+					{// Create an a file for age if not created
+						//index.put((Integer)12, indexFile);
+						FileOutputStream indexFile = new FileOutputStream(Configuration.INDEX_BASE_PATH + person.getAge()+".txt", true);
+						index.put(person.getAge(), indexFile);
+					}
+					
+					// write line to index
+					byte[] lineBytes = String.format("%9s", line).getBytes();
+					index.get(person.getAge()).write(lineBytes);
+					//
+					line++;
+				}
+			}
+			
+			System.out.print("\nIndex creation complete, lines: "+line);
+			System.out.print("\nIndex creation complete, num of ios: "+ios);
+			
+			// Close the index files
+			for(FileOutputStream stream: index.values())
+			{
+				stream.close();
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found" + e);
+		} catch (IOException ioe) {
+			System.out.println("Exception while reading file " + ioe);
+		} finally {
+			// close the streams using close method
+			try {
+				if (rstream != null) {
+					rstream.close();
+				}
+			} catch (IOException ioe) {
+				System.out.println("Error while closing stream: " + ioe);
+			}
+		}
 	}
 
 	
@@ -88,7 +169,7 @@ public class SelectTask implements Task {
 			 * of bytes read.
 			 */
 			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
-				person = Parser.parse(buffer);
+				person = Parser.parse(buffer, 0);
 				if( query.getAge() > -1 && person.getAge() == query.getAge() ){ 
 					memoryManager.increment();
 					System.out.println(String.format(" %s ", person.toString()));

@@ -10,6 +10,7 @@ public class Configuration {
 	public static final String PERSON_TABLE = "person.txt";
 	public static final String PERSON_TABLE_AGE_COLUMN = "AGE";
 	public static final String PERSON_FILE = "data/db/person.txt";
+	public static final String INDEX_BASE_PATH = "data/db/index_";
 	public static final int TUPLE_SIZE = 100;//a tupple has 100 bytes 
 	public static final int BLOCK_SIZE = 4096;//4KB(4*1024)
 
