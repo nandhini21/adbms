@@ -18,18 +18,18 @@ public class Parser {
 	 * @param buffer
 	 * @return Person
 	 */
-	public static Person parse(byte [] buffer){
+	public static Person parse(byte [] buffer, int offset){
 		Person person = new Person();
 		//incomplete tuples or null rows are not processed 
 		if(buffer.length <= 0 ) { 
 			return person; 
 		}
-		person.setSin(new String(buffer, PersonSchema.getSinOffset(), PersonSchema.SIN));
-		person.setFirstName(new String(buffer, PersonSchema.getFirstNameOffset(), PersonSchema.FIRST));
-		person.setLastName(new String(buffer, PersonSchema.getLastNameOffset(), PersonSchema.LAST));
-		person.setAge(Integer.parseInt(new String(buffer, PersonSchema.getAgeOffset(), PersonSchema.AGE)));
-		person.setIncome(Integer.parseInt(new String(buffer, PersonSchema.getIncomeOffset(), PersonSchema.INCOME)));
-		person.setAddress(new String(buffer, PersonSchema.getAddressOffset(), PersonSchema.ADDRESS));
+		person.setSin(new String(buffer, PersonSchema.getSinOffset()+offset, PersonSchema.SIN));
+		person.setFirstName(new String(buffer, PersonSchema.getFirstNameOffset()+offset, PersonSchema.FIRST));
+		person.setLastName(new String(buffer, PersonSchema.getLastNameOffset()+offset, PersonSchema.LAST));
+		person.setAge(Integer.parseInt(new String(buffer, PersonSchema.getAgeOffset()+offset, PersonSchema.AGE)));
+		person.setIncome(Integer.parseInt(new String(buffer, PersonSchema.getIncomeOffset()+offset, PersonSchema.INCOME)));
+		person.setAddress(new String(buffer, PersonSchema.getAddressOffset()+offset, PersonSchema.ADDRESS));
 		return person; 
 	}
 	
