@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
@@ -49,23 +50,32 @@ public class SelectTask implements Task {
 	 * @todo --- add index in at this section. 
 	 * @todo --- only read sequentially if there is no index 
 	 * @todo --- build index on first read, or at initialization 
+	 * @todo SELECT from a line 
+	 *  - find all 18 years old people
+	 * 	- GOTO INDEX find age 18 key ( INDEX[age[18]] )
+	 * 	- lines in index is now [l1,l3, l10]
+	 * 	- lines are sorted by line number 
+	 *  - move sequentially in stream using FileChannel.position( line# * TUPPLE_SIZE )		
+	 *  	for(size in [l1,l3, l10]) 
+	 *  		read from FileChannel.position( size * TUPPLE_SIZE )	
+	 * 
+	 * @todo - how to work with BLOCK and Buffer/Tupple 
+	 * Moving back and forth in a stream to read data 
+	 * <code>	
+	 * 	FileInputStream fis = new FileInputStream("/etc/hosts");
+	 * 	FileChannel     fc = fis.getChannel();
+	 *  				fc.position(100);// set the file pointer to byte position 100;
+	 * </code>
+	 * <code>
+	 * 		public int read(byte[] b, int off, int len) throws IOException
+	 * </code>
+	 * buffer - the buffer into which the data is read. off - the start
+	 * offset in the destination array buffer len - the maximum number
+	 * of bytes read.
 	 */
 	public void execute() throws ExitException {
-
-		/**
-		 * @todo SELECT from a line 
-		 *  - find all 18 years old people
-		 * 	- GOTO INDEX find age 18 key ( INDEX[age[18]] )
-		 * 	- lines in index is now [l1,l3, l10]
-		 * 	- lines are sorted by line number 
-		 *  - move sequentially in stream using FileChannel.position( line# * TUPPLE_SIZE )		
-		 *  	for(size in [l1,l3, l10]) 
-		 *  		read from FileChannel.position( size * TUPPLE_SIZE )	
-		 * 
-		 * @todo - how to work with BLOCK and Buffer/Tupple 
-		 */
-		
 		File file = new File(Configuration.PERSON_FILE);
+		FileChannel     channel;
 		FileInputStream rstream = null;
 		Person person = null; 
 		int reads = 0;
@@ -73,20 +83,15 @@ public class SelectTask implements Task {
 			//@todo read and Establish the index - as the first search hits this execute for first time 
 			// create FileInputStream object
 			rstream = new FileInputStream(file);
-			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
+			channel = rstream.getChannel();
+			memoryManager.calculateFileReadPass(rstream); 
+			
+			
+			
+			//Array Size should always be smaller than Integer.MAX_VALUE
 			byte block[] = new byte[Configuration.BLOCK_SIZE];
-			/**
-			 * Moving back and forth in a stream to read data 
-			 * 	FileInputStream fis = new FileInputStream("/etc/hosts");
-			 * 	FileChannel     fc = fis.getChannel();
-			 *  		fc.position(100);// set the file pointer to byte position 100;
-			 **/
-			/**
-			 * public int read(byte[] b, int off, int len) throws IOException
-			 * buffer - the buffer into which the data is read. off - the start
-			 * offset in the destination array buffer len - the maximum number
-			 * of bytes read.
-			 */
+			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
+
 			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
 				person = Parser.parse(buffer);
 				if( query.getAge() > -1 && person.getAge() == query.getAge() ){ 

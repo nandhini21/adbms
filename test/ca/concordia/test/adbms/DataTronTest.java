@@ -65,8 +65,6 @@ public class DataTronTest {
 	
 	@Test 
 	public void testCanFindTeenagers() throws ExitException, IOException{
-		//1900000 => We have 67 People having 19 Years Old 
-		//1800000 => We have 67 People having 18 Years old
 		Task task = new SelectTask("select -age 19"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
@@ -80,8 +78,6 @@ public class DataTronTest {
 	
 	@Test 
 	public void testCanFindSeniors() throws ExitException, IOException{
-		//8200000 => we have 47 People having 82 years old 
-		//8700000 => we have 67 People having 87 Years old 
 		Task task = new SelectTask("select -age 82"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
@@ -92,10 +88,10 @@ public class DataTronTest {
 		task.execute(); 
 		assertEquals(task.getMemoryManager().getResultSize(), 115);
 	}
+	
+	
 	@Test 
 	public void testCanFindMiddleAged() throws ExitException, IOException{
-		//6600000 => we have 66 People having 66 Years old
-		//5300000 => We have 71 People having 53 Years old 
 		Task task = new SelectTask("select -age 66"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
@@ -115,10 +111,17 @@ public class DataTronTest {
 		//
 	}
 	@Test public void testCanGroupByAge(){}
-	@Test public void testCanCountPassesByMemoryConfiguration(){
+	@Test public void testCanCountPassesByMemoryConfiguration() throws IOException, ExitException{
+		MemoryManager memoryManager = new MemoryManager(); 
+		Task task = new SelectTask("select -age 53"); 
+		task.setMemoryManager(memoryManager);
+		task.execute(); 
+		assertEquals(task.getMemoryManager().getResultSize(), 136);
 		//for 4KB block(read once) count in following scenarios
+		assertEquals(task.getMemoryManager().getTableFileSize(), 1000000);
 		//Using 2MB for main memory
 		//Using 5MB for main memory 
+		assertEquals(task.getMemoryManager().getFileReadPasses(), 781); 
 	}
 	@Test public void testCanNotExceedPasses(){}
 	

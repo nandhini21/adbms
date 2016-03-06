@@ -32,7 +32,7 @@
 	
 	- Parse Data, there is no delimiter on data 
 	- Find a group of people using 
-		- ```sh select -age NUMBER or ( -max NUMBER -min NUMBER)```
+		- ```sh select -age NUMBER or (-max NUMBER -min NUMBER)```
 	- Create index on database file
 	- Use 5MB(and 2MB) memory to perform search operations  
 	- Print _*average income for all age groups*_ 
@@ -60,3 +60,5 @@
 - [](https://dev.mysql.com/doc/refman/5.1/en/innodb-table-and-index.html)
 - [How database indexing works](http://stackoverflow.com/questions/1108/how-does-database-indexing-work)
 - [How to navigate InputStream - to search for data at a given point in a Stream](http://stackoverflow.com/a/15393924/132610)
+- [What is the maximum size of the array in Java?](https://www.quora.com/What-is-the-maximum-size-of-the-array-in-Java)
+- [Byte array that can read more than 1GB of address space](http://stackoverflow.com/a/5532716/132610)
