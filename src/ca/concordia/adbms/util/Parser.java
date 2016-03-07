@@ -25,12 +25,16 @@ public class Parser {
 		if(buffer.length <= 0 ) { 
 			return person; 
 		}
-		person.setSin(new String(buffer, PersonSchema.getSinOffset()+offset, PersonSchema.SIN));
-		person.setFirstName(new String(buffer, PersonSchema.getFirstNameOffset()+offset, PersonSchema.FIRST));
-		person.setLastName(new String(buffer, PersonSchema.getLastNameOffset()+offset, PersonSchema.LAST));
-		person.setAge(Integer.parseInt(new String(buffer, PersonSchema.getAgeOffset()+offset, PersonSchema.AGE)));
-		person.setIncome(Integer.parseInt(new String(buffer, PersonSchema.getIncomeOffset()+offset, PersonSchema.INCOME)));
-		person.setAddress(new String(buffer, PersonSchema.getAddressOffset()+offset, PersonSchema.ADDRESS));
+			try{
+			person.setSin(new String(buffer, PersonSchema.getSinOffset()+offset, PersonSchema.SIN));
+			person.setFirstName(new String(buffer, PersonSchema.getFirstNameOffset()+offset, PersonSchema.FIRST));
+			person.setLastName(new String(buffer, PersonSchema.getLastNameOffset()+offset, PersonSchema.LAST));
+			person.setAge(Integer.parseInt(new String(buffer, PersonSchema.getAgeOffset()+offset, PersonSchema.AGE)));
+			person.setIncome(Integer.parseInt(new String(buffer, PersonSchema.getIncomeOffset()+offset, PersonSchema.INCOME)));
+			person.setAddress(new String(buffer, PersonSchema.getAddressOffset()+offset, PersonSchema.ADDRESS));
+		}catch(Exception e){
+			//System.out.println( String.format("Problem occurred %s === INPUT === %s Length %d Offset %d", e.getMessage(), new String(buffer) , buffer.length, offset));
+		}
 		return person; 
 	}
 	

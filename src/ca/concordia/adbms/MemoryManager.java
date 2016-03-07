@@ -38,7 +38,7 @@ public class MemoryManager {
 	 * @return
 	 */
 	public long getFileReadPasses(){
-		return tableFileSize/(Configuration.MAIN_MEMORY/Configuration.BLOCK_SIZE);
+		return tableFileSize/(Configuration.MEMORY_SIZE/Configuration.BLOCK_SIZE);
 	}
 
 }

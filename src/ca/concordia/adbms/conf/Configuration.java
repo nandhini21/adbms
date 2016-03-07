@@ -6,7 +6,7 @@ import java.util.Map;
 public class Configuration {
 	
 	//Memory in bytes - Alternative value: //2097152MB = 2 * 1024 * 1024 Bytes 
-	public static final Integer MEMORY_SIZE = 5242880;//5MB = 5 * 1024 * 1024 Bytes
+	public static final Integer MEMORY_SIZE = 2097152;//5242880;//5MB = 5 * 1024 * 1024 Bytes
 	public static final String PERSON_TABLE = "person.txt";
 	public static final String PERSON_TABLE_AGE_COLUMN = "AGE";
 	public static final String PERSON_FILE = "data/db/person.txt";

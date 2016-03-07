@@ -31,6 +31,8 @@ public class Client {
 		Logger logger = Logger.getLogger(Client.class);
 		logger.info("Starting application ");
 		MemoryManager memoryManager = new MemoryManager();
+		IndexManager indexManager = new IndexManager(); 
+		indexManager.createIndex();//initializes
 		try {
 			keyboard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println(Configuration.getApplicationTitle() );

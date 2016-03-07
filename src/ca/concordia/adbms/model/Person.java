@@ -18,7 +18,10 @@ public class Person {
 	//49 bytes 
 	private String address;
 	
-	
+	public Person(){
+		age = -1;
+		income = -1; 
+	}
 	
 	public String getSin() {
 		return sin;

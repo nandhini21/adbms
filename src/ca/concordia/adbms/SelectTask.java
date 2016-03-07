@@ -1,5 +1,6 @@
 package ca.concordia.adbms;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +31,19 @@ public class SelectTask implements Task {
 		return memoryManager;
 	}
 
+	private File file = null;
+	private FileChannel channel;
+	private FileInputStream rstream = null;
+
+	
+	
 	public SelectTask(String argument) throws IOException {
+		
+		
+		file = new File(Configuration.PERSON_FILE);
+		rstream = new FileInputStream(file);
+		channel = rstream.getChannel();
+
 		query = Parser.parseSelect(argument);
 		/**
 		 * @todo Make sure we create the index Once 
@@ -39,7 +52,7 @@ public class SelectTask implements Task {
 		 * @todo - Keep it in memory
 		 * @todo - Flush it to files if cannot fit in memory DONE building index
 		 */
-		createIndex();
+		//createIndex();
 	}
 
 	public void createIndex() {
@@ -49,7 +62,7 @@ public class SelectTask implements Task {
 		Person person = null;
 
 		try {
-			System.out.print("\nCreating the index");
+			System.out.println("Creating the index");
 			/**read num multiple blocks at one**/
 			int read;
 			int ios = 0;
@@ -78,8 +91,8 @@ public class SelectTask implements Task {
 					line++;
 				}
 			}
-			System.out.print("\nIndex creation complete, lines: " + line);
-			System.out.print("\nIndex creation complete, num of ios: " + ios);
+			System.out.println("Index creation complete, lines: " + line);
+			System.out.println("Index creation complete, num of ios: " + ios);
 			// Close the index files
 			for (FileOutputStream stream : index.values()) {
 				stream.close();
@@ -123,35 +136,36 @@ public class SelectTask implements Task {
 	 *       bytes read.
 	 */
 	public void execute() throws ExitException {
-		File file = new File(Configuration.PERSON_FILE);
-		FileChannel channel;
-		FileInputStream rstream = null;
 		Person person = null;
 		int reads = 0;
+		int irecords = 0;
 		try {
 			// @todo read and Establish the index - as the first search hits
-			// this execute for first time
-			// create FileInputStream object
-			rstream = new FileInputStream(file);
-			channel = rstream.getChannel();
 			memoryManager.calculateFileReadPass(rstream);
-
 			// Array Size should always be smaller than Integer.MAX_VALUE
-			byte memory[] = new byte[Configuration.MEMORY_SIZE];
-			byte block[] = new byte[Configuration.BLOCK_SIZE];
-			byte buffer[] = new byte[Configuration.TUPLE_SIZE];
-			
-			while ((reads = rstream.read(buffer, 0, buffer.length)) != -1) {
-				person = Parser.parse(buffer, 0);
-				if (query.getAge() > -1 && person.getAge() == query.getAge()) {
-					memoryManager.increment();
-					System.out.println(String.format(" %s ", person.toString()));
-				} else if (query.getMax() > -1 && query.getMin() > -1) {
-					if (person.getAge() <= query.getMax() && person.getAge() >= query.getMin()) {
+			byte memory[] = new byte[Configuration.MEMORY_SIZE];//can be 5MB or 2MB
+			byte block[] = new byte[Configuration.BLOCK_SIZE];//is 4096B
+			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
+			irecords = 0; 
+			while ((reads = rstream.read(memory, 0, memory.length)) != -1) {
+				ByteArrayInputStream bais = new ByteArrayInputStream(memory);	
+				while((bais.read(buffer, 0, buffer.length)) != -1 ){
+					System.out.println(String.format(" %s ", new String(buffer)));
+					person = Parser.parse(buffer, 0);
+					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
 						memoryManager.increment();
-						System.out.println(String.format(" %s ", person.toString()));
+						//System.out.println(String.format(" %s ", person.toString()));
+					} else if (query.getMax() > -1 && query.getMin() > -1) {
+						if (person.getAge() <= query.getMax() && person.getAge() >= query.getMin()) {
+							memoryManager.increment();
+							//System.out.println(String.format(" %s ", person.toString()));
+						}
 					}
+					//off = off + buffer.length;
 				}
+				irecords = irecords + 1;
+				//System.out.println( String.format(" OFF %d BUFFER LEN : %d MEMORY %d RECORDS %d %s", off, buffer.length, memory.length, irecords, new String(buffer) ));
+				System.out.println( String.format(" RECORDS %d ", irecords ));
 			}
 			// buffer = null;
 		} catch (FileNotFoundException e) {

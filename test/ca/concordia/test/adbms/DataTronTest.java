@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.concordia.adbms.ExitException;
+import ca.concordia.adbms.IndexManager;
 import ca.concordia.adbms.MemoryManager;
 import ca.concordia.adbms.SelectQuery;
 import ca.concordia.adbms.SelectTask;
@@ -65,19 +66,26 @@ public class DataTronTest {
 	
 	@Test 
 	public void testCanFindTeenagers() throws ExitException, IOException{
+		IndexManager indexManager = new IndexManager(); 
+		indexManager.createIndex();
+		
 		Task task = new SelectTask("select -age 19"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
+		assertEquals(indexManager.getIndexKeys(19).length, 119);
 		assertEquals(task.getMemoryManager().getResultSize(), 119);
 		
 		task = new SelectTask("select -age 18"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
+		assertEquals(indexManager.getIndexKeys(18).length, 128);
 		assertEquals(task.getMemoryManager().getResultSize(), 128);
 	}
 	
 	@Test 
 	public void testCanFindSeniors() throws ExitException, IOException{
+		
+		
 		Task task = new SelectTask("select -age 82"); 
 		task.setMemoryManager( new MemoryManager());
 		task.execute(); 
@@ -104,12 +112,13 @@ public class DataTronTest {
 	}
 	
 
-
 	@Test
 	public void testAverageIncome() {
 		//for all age groups
 		//
 	}
+	
+	
 	@Test public void testCanCountPassesByMemoryConfiguration() throws IOException, ExitException{
 		MemoryManager memoryManager = new MemoryManager(); 
 		Task task = new SelectTask("select -age 53"); 
@@ -119,10 +128,16 @@ public class DataTronTest {
 		//for 4KB block(read once) count in following scenarios
 		assertEquals(task.getMemoryManager().getTableFileSize(), 1000000);
 		//Using 2MB for main memory
-		//Using 5MB for main memory 
-		assertEquals(task.getMemoryManager().getFileReadPasses(), 781); 
-		
+		if( Configuration.MEMORY_SIZE == 2097152 ){ 
+			assertEquals(task.getMemoryManager().getFileReadPasses(), 1953); 
+		}else{
+			//Using 5MB for main memory 
+			assertEquals(task.getMemoryManager().getFileReadPasses(), 781);
+		}
 	}
+	
+	
+	
 
 	@Test public void testCanNotExceedPasses() throws IOException, ExitException{
 		//assertEquals()
