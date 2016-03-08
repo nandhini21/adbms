@@ -1,5 +1,6 @@
 package ca.concordia.adbms.util;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +39,13 @@ public class Parser {
 		}
 		return person; 
 	}
-	
+
+
+	public static Person parse(ByteBuffer[] bbuffer, int offset){
+		byte buffer[] = new byte[100]; 
+		ByteBuffer b = bbuffer.get(buffer, 0, 100);
+		return Parser.parse(buffer, 0);
+	}
 	
 
 	/**
@@ -108,4 +115,7 @@ public class Parser {
 		}
 		return keyValues.toArray(new Integer[keyValues.size()]);
 	}
+
+
+
 }

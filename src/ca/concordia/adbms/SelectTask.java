@@ -3,6 +3,7 @@ package ca.concordia.adbms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 import ca.concordia.adbms.conf.Configuration;
@@ -58,12 +59,15 @@ public class SelectTask implements Task {
 			indexValueLineNumbers = indexManager.getIndexKeys(query.getAge());
 			memoryManager.calculateFileReadPass(rstream);
 			// Array Size should always be smaller than Integer.MAX_VALUE
-			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
+			//byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
+			ByteBuffer bbuffer[] = new ByteBuffer[Configuration.TUPLE_SIZE]; 
 			for(Integer lineNumber: indexValueLineNumbers){
-				rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE);
-				reads = rstream.read(buffer, 0, buffer.length);
+				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer, 0, Configuration.TUPLE_SIZE);
+				//reads = rstream.read(buffer, 0, buffer.length);
+				//byte[] buffer = (new String(bbuffer)).getBytes();//new byte[bbuffer.length];//Configuration.TUPLE_SIZE
+				//ByteBuffer b = buffer.get(bbuffer,0, buffer.length);
 				if( reads > -1 ){
-					person = Parser.parse(buffer, 0);
+					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
 						memoryManager.increment();
 							System.out.println(String.format(" %s ", person.toString()));
