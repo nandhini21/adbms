@@ -1,5 +1,9 @@
 .settings
 .metadata
+.idea/
+adbms.iml
+nb-configuration.xml
+nbactions.xml
 /data/db/*
 /bin/
 /target/
