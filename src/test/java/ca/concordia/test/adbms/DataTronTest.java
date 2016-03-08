@@ -20,6 +20,7 @@ import org.junit.Test;
 
 public class DataTronTest {
     
+    Task task;
     IndexManager indexManager;
     MemoryManager memoryManager;
 
@@ -32,6 +33,9 @@ public class DataTronTest {
 
     @After
     public void tearDown() {
+        task = null;
+        memoryManager = null; 
+        indexManager = null;
     }
 
     @Test
@@ -39,8 +43,8 @@ public class DataTronTest {
         assertEquals(Configuration.TUPLE_SIZE, 100);
         assertEquals(Configuration.BLOCK_SIZE, (4 * 1024));
         assertTrue(Configuration.MEMORY_SIZE == (5 * 1024 * 1024) || Configuration.MEMORY_SIZE == (2 * 1024 * 1024));
-        assertTrue(Configuration.PERSON_TABLE == "person.txt");
-        assertTrue(Configuration.PERSON_FILE == "data/db/person.txt");
+        assertEquals(Configuration.PERSON_TABLE,"person.txt");
+        assertEquals(Configuration.PERSON_FILE,"data/db/person.txt");
     }
 
     @Test
@@ -73,7 +77,7 @@ public class DataTronTest {
     @Test
     public void testCanFindTeenagers() throws ExitException, IOException {
 
-        Task task = new SelectTask("select -age 19");
+        task = new SelectTask("select -age 19");
         task.setMemoryManager(memoryManager);
         task.setIndexManager(indexManager);
         task.execute();
@@ -98,7 +102,7 @@ public class DataTronTest {
     @Test
     public void testCanFindSeniors() throws ExitException, IOException {
 
-        Task task = new SelectTask("select -age 82");
+        task = new SelectTask("select -age 82");
         task.setMemoryManager(memoryManager);
         task.setIndexManager(indexManager);
         task.execute();
@@ -115,7 +119,7 @@ public class DataTronTest {
 
     @Test
     public void testCanFindMiddleAged() throws ExitException, IOException {
-        Task task = new SelectTask("select -age 66");
+        task = new SelectTask("select -age 66");
         task.setMemoryManager(memoryManager);
         task.setIndexManager(indexManager);
         task.execute();
@@ -136,7 +140,7 @@ public class DataTronTest {
 
     @Test
     public void testCanCountPassesByMemoryConfiguration() throws IOException, ExitException {
-        Task task = new SelectTask("select -age 53");
+        task = new SelectTask("select -age 53");
         task.setMemoryManager(memoryManager);
         task.setIndexManager(indexManager);
         task.execute();
@@ -154,7 +158,7 @@ public class DataTronTest {
 
     @Test
     public void testCanNotExceedPasses() throws IOException, ExitException {
-        Task task = new SelectTask("select -age 53");
+        task = new SelectTask("select -age 53");
         task.setMemoryManager(memoryManager);
         task.setIndexManager(indexManager);
         task.execute();
