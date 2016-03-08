@@ -64,8 +64,6 @@ public class SelectTask implements Task {
 			for(Integer lineNumber: indexValueLineNumbers){
 				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer, 0, Configuration.TUPLE_SIZE);
 				//reads = rstream.read(buffer, 0, buffer.length);
-				//byte[] buffer = (new String(bbuffer)).getBytes();//new byte[bbuffer.length];//Configuration.TUPLE_SIZE
-				//ByteBuffer b = buffer.get(bbuffer,0, buffer.length);
 				if( reads > -1 ){
 					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
