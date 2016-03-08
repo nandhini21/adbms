@@ -1,8 +1,10 @@
 package ca.concordia.adbms;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 
 import org.apache.log4j.Logger;
 
@@ -18,12 +20,12 @@ import ca.concordia.adbms.conf.Configuration;
  * @author murindwaz
  */
 public class Client {
-	
+
 	/**
 	 * @param args
-	 * @throws SocketException
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws SocketException {
+	public static void main(String[] args) throws FileNotFoundException {
 		Task task;
 		String argument;
 		BufferedReader keyboard;
@@ -32,7 +34,7 @@ public class Client {
 		logger.info("Starting application ");
 		MemoryManager memoryManager = new MemoryManager();
 		IndexManager indexManager = new IndexManager(); 
-		indexManager.createIndex();//initializes
+		indexManager.createIndex(new FileInputStream(new File(Configuration.PERSON_FILE) ));//initializes
 		try {
 			keyboard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println(Configuration.getApplicationTitle() );
@@ -46,8 +48,8 @@ public class Client {
 					try{
 						task = TaskFactory.create(argument);
 						if(task instanceof SelectTask){
-							//if index not created, create ONE && task.setIndexManager(indexManager);
 							task.setMemoryManager(memoryManager);
+							task.setIndexManager(indexManager);
 						}
 						if(task != null ){ 
 							task.execute();

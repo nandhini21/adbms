@@ -1,5 +1,6 @@
 package ca.concordia.adbms.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import ca.concordia.adbms.SelectQuery;
@@ -75,5 +76,36 @@ public class Parser {
 			max = Integer.parseInt(java.util.Arrays.asList(parsed).get(maxIndex + 1));
 		}
 		return new SelectQuery(min, age, max); 
+	}
+
+
+	/**
+	 * This function might be a bit expensive
+	 * Function used to parse Index Key File
+	 * @param line
+	 * @return
+	 */
+	public static Integer[] parseIndexPointer(String line) {
+		int repetitions = 0;//error detection --- if 3 consecutive values are presented, we stop search 
+		Integer value;
+		ArrayList<Integer> keyValues = new ArrayList<Integer>(); 
+		String[] parsed = line.split(" ");
+		for( String split : java.util.Arrays.asList(parsed) ){
+			if( split.trim().length() <= 0 || !(split instanceof String) ){
+				continue;
+			}
+			repetitions++;
+			try{
+				value = Integer.parseInt(split.trim());
+				if(!keyValues.contains(value)) { 
+					repetitions = 0;
+					keyValues.add(value); 
+				}
+			}catch(Exception exception){
+				System.out.println(String.format("Exception %s %s", split, exception.getMessage()));
+			}
+			if( repetitions == 3 ){ break; }
+		}
+		return keyValues.toArray(new Integer[keyValues.size()]);
 	}
 }

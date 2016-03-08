@@ -1,13 +1,9 @@
 package ca.concordia.adbms;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.Hashtable;
 
 import ca.concordia.adbms.conf.Configuration;
 import ca.concordia.adbms.model.Person;
@@ -21,16 +17,27 @@ public class SelectTask implements Task {
 	// age to select from
 	private SelectQuery query;
 	private MemoryManager memoryManager;
+	private IndexManager indexManager;
+	private Integer[] indexValueLineNumbers;
 
 	// injecting memory manager in this task
 	public void setMemoryManager(MemoryManager memoryManager) {
 		this.memoryManager = memoryManager;
 	}
 
+
 	public MemoryManager getMemoryManager() {
 		return memoryManager;
 	}
 
+	
+	public void setIndexManager(IndexManager indexManager) {
+		this.indexManager = indexManager;
+	}
+	public IndexManager getIndexManager(){
+		return indexManager; 
+	}
+	
 	private File file = null;
 	private FileChannel channel;
 	private FileInputStream rstream = null;
@@ -38,78 +45,39 @@ public class SelectTask implements Task {
 	
 	
 	public SelectTask(String argument) throws IOException {
-		
-		
 		file = new File(Configuration.PERSON_FILE);
 		rstream = new FileInputStream(file);
 		channel = rstream.getChannel();
-
 		query = Parser.parseSelect(argument);
-		/**
-		 * @todo Make sure we create the index Once 
-		 * @todo build index here Index looks like: INDEX = [ age[18] : [l1,l3,
-		 *       l10], age[20] : [l12,l13, l110] age[60] : [l21,l23, l210] ]
-		 * @todo - Keep it in memory
-		 * @todo - Flush it to files if cannot fit in memory DONE building index
-		 */
-		//createIndex();
 	}
 
-	public void createIndex() {
-
-		File file = new File(Configuration.PERSON_FILE);
-		FileInputStream rstream = null;
+	public void execute() throws ExitException {
+		int reads = 0;
 		Person person = null;
-
 		try {
-			System.out.println("Creating the index");
-			/**read num multiple blocks at one**/
-			int read;
-			int ios = 0;
-			int line = 0;
-			String indexFileLocation;
-			byte buffer[] = new byte[Configuration.BLOCK_SIZE];
-			// make sure when read a record is not "cut"
-			int readSize = (int) Math.floor(Configuration.BLOCK_SIZE / Configuration.TUPLE_SIZE) * Configuration.TUPLE_SIZE;
-			Hashtable<Integer, FileOutputStream> index = new Hashtable<Integer, FileOutputStream>();
-			rstream = new FileInputStream(file);
-			while ((read = rstream.read(buffer, 0, readSize)) != -1) {
-				ios += 1;
-				// number of records read
-				int numRecords = (int) Math.floor(read / Configuration.TUPLE_SIZE);
-				for (int i = 0; i < numRecords; i++) {
+			indexValueLineNumbers = indexManager.getIndexKeys(query.getAge());
+			memoryManager.calculateFileReadPass(rstream);
+			// Array Size should always be smaller than Integer.MAX_VALUE
+			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
+			for(Integer lineNumber: indexValueLineNumbers){
+				rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE);
+				reads = rstream.read(buffer, 0, buffer.length);
+				if( reads > -1 ){
 					person = Parser.parse(buffer, 0);
-					if (!index.containsKey(person.getAge())) { 
-						indexFileLocation = String.format("%s%d.txt", Configuration.INDEX_BASE_PATH, person.getAge());
-						/**Create a file for age if not created index.put((Integer)12, indexFile);*/	
-						FileOutputStream indexFile = new FileOutputStream(indexFileLocation, true);
-						index.put(person.getAge(), indexFile);
+					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
+						memoryManager.increment();
+							System.out.println(String.format(" %s ", person.toString()));
+					} else if (query.getMax() > -1 && query.getMin() > -1) {
+						if (person.getAge() <= query.getMax() && person.getAge() >= query.getMin()) {
+							memoryManager.increment();
+							System.out.println(String.format(" %s ", person.toString()));
+						}
 					}
-					// write line to index
-					byte[] lineBytes = String.format("%9s", line).getBytes();
-					index.get(person.getAge()).write(lineBytes);
-					line++;
 				}
 			}
-			System.out.println("Index creation complete, lines: " + line);
-			System.out.println("Index creation complete, num of ios: " + ios);
-			// Close the index files
-			for (FileOutputStream stream : index.values()) {
-				stream.close();
-			}
-		} catch (FileNotFoundException e) {
-			System.out.println("File not found" + e);
-		} catch (IOException ioe) {
-			System.out.println("Exception while reading file " + ioe);
-		} finally {
-			// close the streams using close method
-			try {
-				if (rstream != null) {
-					rstream.close();
-				}
-			} catch (IOException ioe) {
-				System.out.println("Error while closing stream: " + ioe);
-			}
+		} catch (Exception exception) {
+			//FileNotFoundException - IOException - Or Exception are 
+			System.out.println( String.format( "Exception. Code %s - details %s", exception.getClass().getName(), exception.getMessage()));
 		}
 	}
 
@@ -134,7 +102,6 @@ public class SelectTask implements Task {
 	 * </code> buffer - the buffer into which the data is read. off - the start
 	 *       offset in the destination array buffer len - the maximum number of
 	 *       bytes read.
-	 */
 	public void execute() throws ExitException {
 		Person person = null;
 		int reads = 0;
@@ -147,9 +114,10 @@ public class SelectTask implements Task {
 			byte block[] = new byte[Configuration.BLOCK_SIZE];//is 4096B
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
 			irecords = 0; 
-			while ((reads = rstream.read(memory, 0, memory.length)) != -1) {
-				ByteArrayInputStream bais = new ByteArrayInputStream(memory);	
-				while((bais.read(buffer, 0, buffer.length)) != -1 ){
+			//while ((reads = rstream.read(memory, 0, memory.length)) != -1) {
+				//ByteArrayInputStream bais = new ByteArrayInputStream(memory);	
+				//while((bais.read(buffer, 0, buffer.length)) != -1 ){
+				while((rstream.read(buffer, 0, buffer.length)) != -1 ){
 					System.out.println(String.format(" %s ", new String(buffer)));
 					person = Parser.parse(buffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
@@ -162,11 +130,11 @@ public class SelectTask implements Task {
 						}
 					}
 					//off = off + buffer.length;
+					irecords = irecords + 1;
 				}
-				irecords = irecords + 1;
 				//System.out.println( String.format(" OFF %d BUFFER LEN : %d MEMORY %d RECORDS %d %s", off, buffer.length, memory.length, irecords, new String(buffer) ));
 				System.out.println( String.format(" RECORDS %d ", irecords ));
-			}
+			//}
 			// buffer = null;
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found" + e);
@@ -182,6 +150,6 @@ public class SelectTask implements Task {
 				System.out.println("Error while closing stream: " + ioe);
 			}
 		}
-	}
+	}**/
 
 }

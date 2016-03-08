@@ -14,4 +14,10 @@ public class ExitTask implements Task {
 	public MemoryManager getMemoryManager() {
 		return null;
 	}
+	public void setIndexManager(IndexManager indexManager) {
+		
+	}
+	public IndexManager getIndexManager() {
+		return null;
+	}
 }
