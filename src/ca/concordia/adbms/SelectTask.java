@@ -62,7 +62,7 @@ public class SelectTask implements Task {
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
 			for(Integer lineNumber: indexValueLineNumbers){
 				ByteBuffer bbuffer = ByteBuffer.wrap(buffer); //[Configuration.TUPLE_SIZE]; 
-				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer, Configuration.TUPLE_SIZE );//, Configuration.TUPLE_SIZE 
+				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer);//, Configuration.TUPLE_SIZE 
 				if( reads > -1 ){
 					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
