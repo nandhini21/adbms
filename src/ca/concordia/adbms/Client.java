@@ -29,7 +29,11 @@ public class Client {
         logger.info("Starting application ");
         MemoryManager memoryManager = new MemoryManager();
         IndexManager indexManager = new IndexManager();
+        memoryManager.startTimer();
         indexManager.createIndex(new FileInputStream(new File(Configuration.PERSON_FILE)));//initializes
+        memoryManager.stopTimer();
+        memoryManager.report(); 
+        memoryManager.reset();
         try {
             keyboard = new BufferedReader(new InputStreamReader(System.in));
             System.out.println(Configuration.getApplicationTitle());

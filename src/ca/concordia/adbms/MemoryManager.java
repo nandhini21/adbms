@@ -49,6 +49,7 @@ public class MemoryManager {
 	
 	
 	public double average(){
+		if( incomes < 1 || people < 1 ) return 0.00;
 		//return Math.round((incomes/people) * 100)/100;
 		return (double)(incomes/people); 
 	}
