@@ -62,8 +62,8 @@ public class SelectTask implements Task {
 			// Array Size should always be smaller than Integer.MAX_VALUE
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
 			for(Integer lineNumber: indexValueLineNumbers){
-				ByteBuffer bbuffer = ByteBuffer.wrap(buffer); //[Configuration.TUPLE_SIZE]; 
-				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer);//, Configuration.TUPLE_SIZE 
+				ByteBuffer bbuffer = ByteBuffer.wrap(buffer);
+				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer); 
 				if( reads > -1 ){
 					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
@@ -78,6 +78,7 @@ public class SelectTask implements Task {
 						}
 					}
 				}
+				bbuffer.clear();
 			}
 		} catch (Exception exception) {
 			//FileNotFoundException - IOException - Or Exception are 

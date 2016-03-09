@@ -33,14 +33,17 @@ public class IndexManager {
 		File file = new File(indexFileName);
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
 		if(file.exists()){
-			byte [] buffer = new byte[(int) file.length()];
+			byte [] buffer = new byte[(int) file.length()];//this will crash the file if file is bigger that available size 
 			int read = new FileInputStream(file).read(buffer, 0, buffer.length); 
+			//@todo --- read and parse bytes this cannot fit in available memory 
 			Integer[] indexLines = Parser.parseIndexPointer(new String(buffer) );
 			for(Integer lineNumber: indexLines ){
 				tmp.add(lineNumber);
 			}
+			buffer = null;//clear the address asap
 		}
 		Integer[] values = tmp.toArray(new Integer[tmp.size()]);
+		tmp = null; 
 		return values;
 	}
 
