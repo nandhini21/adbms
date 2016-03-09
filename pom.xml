@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ca.concordia.adbms</groupId>
-  <artifactId>alpha</artifactId>
+  <artifactId>adbms</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>alpha</name>
+  <name>adbms</name>
   <url>http://maven.apache.org</url>
 
   <properties>
