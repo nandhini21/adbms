@@ -41,7 +41,7 @@ public class Parser {
 	}
 
 
-	public static Person parse(ByteBuffer[] bbuffer, int offset){
+	public static Person parse(ByteBuffer bbuffer, int offset){
 		byte buffer[] = new byte[100]; 
 		ByteBuffer b = bbuffer.get(buffer, 0, 100);
 		return Parser.parse(buffer, 0);
