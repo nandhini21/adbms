@@ -63,7 +63,7 @@ public class SelectTask implements Task {
 			byte buffer[] = new byte[Configuration.TUPLE_SIZE];//is 100KB
 			for(Integer lineNumber: indexValueLineNumbers){
 				ByteBuffer bbuffer = ByteBuffer.wrap(buffer);
-				reads = (int)rstream.getChannel().position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer); 
+				reads = (int)channel.position(lineNumber  * Configuration.TUPLE_SIZE).read(bbuffer); 
 				if( reads > -1 ){
 					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
@@ -79,13 +79,13 @@ public class SelectTask implements Task {
 					}
 				}
 				bbuffer.clear();
+                                buffer = new byte[Configuration.TUPLE_SIZE];
 			}
 		} catch (Exception exception) {
 			//FileNotFoundException - IOException - Or Exception are 
 			System.out.println( String.format( "Exception. Code %s - details %s", exception.getClass().getName(), exception.getMessage()));
 		}
 		memoryManager.stopTimer();
-
 	}
 
 
