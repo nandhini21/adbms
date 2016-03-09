@@ -55,6 +55,7 @@ public class SelectTask implements Task {
 	public void execute() throws ExitException {
 		int reads = 0;
 		Person person = null;
+		memoryManager.startTimer();
 		try {
 			indexValueLineNumbers = indexManager.getIndexKeys(query.getAge());
 			memoryManager.calculateFileReadPass(rstream);
@@ -67,10 +68,12 @@ public class SelectTask implements Task {
 					person = Parser.parse(bbuffer, 0);
 					if (query.getAge() > -1 && person.getAge() == query.getAge()) {
 						memoryManager.increment();
-							System.out.println(String.format(" %s ", person.toString()));
+						memoryManager.reportIncome(person.getIncome());
+						System.out.println(String.format(" %s ", person.toString()));
 					} else if (query.getMax() > -1 && query.getMin() > -1) {
 						if (person.getAge() <= query.getMax() && person.getAge() >= query.getMin()) {
 							memoryManager.increment();
+							memoryManager.reportIncome(person.getIncome());
 							System.out.println(String.format(" %s ", person.toString()));
 						}
 					}
@@ -80,6 +83,8 @@ public class SelectTask implements Task {
 			//FileNotFoundException - IOException - Or Exception are 
 			System.out.println( String.format( "Exception. Code %s - details %s", exception.getClass().getName(), exception.getMessage()));
 		}
+		memoryManager.stopTimer();
+
 	}
 
 

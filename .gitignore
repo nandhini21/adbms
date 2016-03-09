@@ -4,6 +4,7 @@
 adbms.iml
 nb-configuration.xml
 nbactions.xml
+/data/*.txt
 /data/db/*
 /bin/
 /target/
