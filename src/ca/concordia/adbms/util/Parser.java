@@ -42,9 +42,17 @@ public class Parser {
 
 
 	public static Person parse(ByteBuffer bbuffer, int offset){
-		byte buffer[] = new byte[100]; 
-		ByteBuffer b = bbuffer.get(buffer, 0, 100);
-		return Parser.parse(buffer, 0);
+		Person person; 
+		if(bbuffer.hasArray() ){
+			person = Parser.parse(bbuffer.array(), 0);
+		}else{
+			byte buffer[] = new byte[100]; 
+			ByteBuffer b = bbuffer.get(buffer, 0, 100);
+			person = Parser.parse(bbuffer.array(), 0);
+			//clean used data structures - for GC to collect them 
+			b.clear(); b = null; buffer = null;
+		}
+		return person;
 	}
 	
 
