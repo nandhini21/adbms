@@ -36,20 +36,23 @@ public class Client {
             //a session is available till user exits  
             while (session) {
                 logger.info("Starting client's session");
-                System.out.printf(Configuration.getCommandHelp().get(Configuration.ALLOWED_COMMANDS[ Configuration.SELECT]), "\r\n >");
+                System.out.println(Configuration.getCommandHelp().get(Configuration.ALLOWED_COMMANDS[ Configuration.SELECT]));
                 boolean valid = false;
                 while (!valid) {
+                    System.out.println("\r\n ENTER YOUR QUERY HERE >");
                     argument = new String(keyboard.readLine()).trim().replaceAll("\\s+", " ");
                     try {
                         task = TaskFactory.create(argument);
                         if (task instanceof SelectTask) {
+                        	memoryManager.reset();
                             task.setMemoryManager(memoryManager);
                             task.setIndexManager(indexManager);
                         }
                         if (task != null) {
                             task.execute();
+                            memoryManager.report();
                         } else {
-                            System.out.println(" ------ YOU HAVE TO START OVER AGAIN.---- \r\n > ");
+                            System.out.println(" ---SOMETHING WENT HORRIBLY WRONG ---SORRY, BUT YOU HAVE TO START OVER AGAIN.---- \r\n ENTER YOUR QUERY HERE >");
                         }
                     } catch (ExitException e) {
                         valid = false;
