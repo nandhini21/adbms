@@ -30,6 +30,7 @@ public class Client {
         MemoryManager memoryManager = new MemoryManager();
         IndexManager indexManager = new IndexManager();
         memoryManager.startTimer();
+        //@todo -- uncomment to create index files. 
         indexManager.createIndex(new FileInputStream(new File(Configuration.PERSON_FILE)));//initializes
         memoryManager.stopTimer();
         memoryManager.report(); 

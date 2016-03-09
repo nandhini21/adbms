@@ -75,7 +75,7 @@ public class MemoryManager {
 	}
 	
 	public void report(){
-		String _report = String.format(" ====== Report ==== \r\n Execution time %.4f milliseconds. \r\n Average Income $ %.2f.\r\n Results %d ", timer, average(), resultSize);
+		String _report = String.format(" ====== Report ==== \r\n Execution time %d seconds. \r\n Average Income $ %.2f.\r\n Results %d ", timer/1000, average(), resultSize);
 		System.out.println(_report);
 	}
 	/**
